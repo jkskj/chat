@@ -19,6 +19,7 @@ func BuildGroup(group model.Group) Group {
 		Creator: creator,
 	}
 }
+
 func BuildGroups(items []model.Group) (Groups []Group) {
 	for _, item := range items {
 		group := BuildGroup(item)

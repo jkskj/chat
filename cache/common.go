@@ -91,6 +91,8 @@ func LoadRedisData(file *ini.File) {
 	RedisPw = file.Section("redis").Key("RedisPw").String()
 	RedisDbName = file.Section("redis").Key("RedisDbName").String()
 }
+
+// SingleStream 单聊的stream
 func SingleStream() {
 	SingleStreamMQ = NewStreamMQ(RedisClient, 100, true)
 	topic := "single"
@@ -110,6 +112,8 @@ func SingleStream() {
 		return nil
 	})
 }
+
+// GroupStream 群聊的stream
 func GroupStream() {
 	GroupStreamMQ = NewStreamMQ(RedisClient, 100, true)
 	topic := "group"
@@ -129,12 +133,16 @@ func GroupStream() {
 		return nil
 	})
 }
+
+// 单聊消息mysql储存
 func singleMysqlSave(replyMsg model.SingleMessage) {
 	err := model.DB.Save(&replyMsg).Error
 	if err != nil {
 		fmt.Println("消息mysql存储失败！！！")
 	}
 }
+
+// 群聊消息mysql储存
 func groupMysqlSave(replyMsg model.GroupMessage) {
 	err := model.DB.Save(&replyMsg).Error
 	if err != nil {

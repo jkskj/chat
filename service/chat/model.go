@@ -61,7 +61,7 @@ type SingleSendMsg struct {
 var clients = make(map[WsKey]*websocket.Conn)
 
 // 广播通道，用于广播推送群聊用户发送的消息(带缓冲区，提高并发速率)
-var groupBroadcast = make(chan UserMessage, 10000)
+var groupBroadcast = make(chan GroupMessage, 10000)
 
 var lock sync.RWMutex
 
@@ -71,21 +71,12 @@ type GroupSendMsg struct {
 	Content string `json:"content"`
 }
 
-// UserMessage 群聊包装后的消息
-type UserMessage struct {
+// GroupMessage 群聊包装后的消息
+type GroupMessage struct {
 	GroupId     int64           ` json:"group_id"`
 	MessageData string          `json:"message_data"`
 	CreateTime  string          `json:"create_time"`
 	User        serializer.User `json:"user"`
-}
-
-// GroupMessage 群聊的消息
-type GroupMessage struct {
-	GroupId     int64  `json:"group_id"`
-	UserId      int64  `json:"user_id"`
-	MessageData string `json:"message_data"`
-	CreateTime  string `json:"create_time"`
-	ExpireTime  string `json:"expire_time"`
 }
 
 // WsKey 群聊key

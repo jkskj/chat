@@ -9,6 +9,7 @@ type GroupMessage struct {
 	MessageData string ` json:"message_data"`
 	CreateTime  string `json:"create_time"`
 }
+
 type SingleMessage struct {
 	Id          int64  `json:"id"`
 	ToUser      User   `json:"to_user"`
@@ -28,6 +29,7 @@ func BuildGroupMessage(groupMessage model.GroupMessage) GroupMessage {
 		CreateTime:  groupMessage.CreateTime,
 	}
 }
+
 func BuildGroupMessages(items []model.GroupMessage) (groupMessages []GroupMessage) {
 	for _, item := range items {
 		groupMessage := BuildGroupMessage(item)
@@ -35,6 +37,7 @@ func BuildGroupMessages(items []model.GroupMessage) (groupMessages []GroupMessag
 	}
 	return groupMessages
 }
+
 func BuildSingleMessage(singleMessage model.SingleMessage) SingleMessage {
 	var fromUser, toUser model.User
 	model.DB.First(&fromUser, singleMessage.FromId)
@@ -47,6 +50,7 @@ func BuildSingleMessage(singleMessage model.SingleMessage) SingleMessage {
 		CreateTime:  singleMessage.CreateTime,
 	}
 }
+
 func BuildSingleMessages(items []model.SingleMessage) (singleMessages []SingleMessage) {
 	for _, item := range items {
 		singleMessage := BuildSingleMessage(item)

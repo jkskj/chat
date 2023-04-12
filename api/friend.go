@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetFriends 获取好友列表
 func GetFriends(c *gin.Context) {
 	var friend service.FriendService
 	code := e.SUCCESS
@@ -16,6 +17,7 @@ func GetFriends(c *gin.Context) {
 
 }
 
+// MakeFriends 发送好友申请
 func MakeFriends(c *gin.Context) {
 	var friend service.FriendService
 	code := e.SUCCESS
@@ -29,6 +31,8 @@ func MakeFriends(c *gin.Context) {
 		c.JSON(code, err)
 	}
 }
+
+// GetApplication 获取好友申请
 func GetApplication(c *gin.Context) {
 	var friend service.FriendService
 	code := e.SUCCESS
@@ -42,6 +46,8 @@ func GetApplication(c *gin.Context) {
 		c.JSON(code, err)
 	}
 }
+
+// Reply 回复好友申请
 func Reply(c *gin.Context) {
 	var friend service.FriendService
 	code := e.SUCCESS
@@ -55,6 +61,8 @@ func Reply(c *gin.Context) {
 		c.JSON(code, err)
 	}
 }
+
+// SingleMessage 获取单聊消息
 func SingleMessage(c *gin.Context) {
 	var group service.FriendService
 	code := e.SUCCESS

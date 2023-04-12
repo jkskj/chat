@@ -74,7 +74,7 @@ func GroupChat(c *gin.Context) {
 			}
 
 			//创建基础聊天消息模板
-			chatMessage := GroupMessage{
+			chatMessage := model.GroupMessage{
 				MessageData: msg.Content,
 				UserId:      uid,
 				GroupId:     gid,
@@ -88,15 +88,16 @@ func GroupChat(c *gin.Context) {
 			model.DB.Model(&user).Where("id=?", chatMessage.UserId).Find(&user)
 
 			//创建用户聊天消息模板（往基础聊天消息模板里添加用户头像与用户昵称）
-			userMessage := UserMessage{
+			userMessage := GroupMessage{
 				//Message中的数据
 				MessageData: chatMessage.MessageData,
 				User:        serializer.BuildUser(user),
 				GroupId:     chatMessage.GroupId,
 				CreateTime:  chatMessage.CreateTime,
 			}
-
+			//储存
 			//go groupMysqlSave(chatMessage)
+
 			go groupRedisSave(chatMessage)
 			//将聊天消息模板（用户发送的消息及用户头像昵称）插入广播频道，推送给其他websocket客户端
 			groupBroadcast <- userMessage
@@ -183,28 +184,18 @@ func pushMessages() {
 		}
 	}
 }
-func groupMysqlSave(replyMsg GroupMessage) {
-	var msg model.GroupMessage
-	msg.MessageData = replyMsg.MessageData
-	msg.CreateTime = replyMsg.CreateTime
-	msg.GroupId = replyMsg.GroupId
-	msg.UserId = replyMsg.UserId
-	msg.CreateTime = replyMsg.CreateTime
-	err := model.DB.Save(&msg).Error
+func groupMysqlSave(replyMsg model.GroupMessage) {
+
+	err := model.DB.Create(&replyMsg).Error
 	if err != nil {
 		fmt.Println("消息mysql存储失败！！！")
 	}
 }
 
 // redis储存
-func groupRedisSave(replyMsg GroupMessage) {
-	var msg model.GroupMessage
-	msg.MessageData = replyMsg.MessageData
-	msg.CreateTime = replyMsg.CreateTime
-	msg.GroupId = replyMsg.GroupId
-	msg.UserId = replyMsg.UserId
-	msg.ExpireTime = replyMsg.ExpireTime
-	message, err := json.Marshal(msg)
+func groupRedisSave(replyMsg model.GroupMessage) {
+
+	message, err := json.Marshal(replyMsg)
 	if err != nil {
 		fmt.Println("json格式转换失败")
 	}

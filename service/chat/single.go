@@ -24,7 +24,11 @@ func (manager *Manager) Start() {
 
 		case conn := <-ClientsManager.Login: // 建立连接
 			log.Printf("建立新连接: %v", conn.ID)
+
+			lock.RLock()
 			ClientsManager.Clients[conn.ID] = conn
+			lock.RUnlock()
+
 			replyMsg := &SingleMessage{
 				FromID:     "0",
 				FromUser:   "服务器",
@@ -195,8 +199,9 @@ func (c *Client) Read() {
 				User:    c,
 				Message: message,
 			}
-			//go singleMysqlSave(message)
 			//储存
+			//go singleMysqlSave(message)
+
 			go singleRedisSave(message)
 			//获取聊天记录
 		} else if sendMsg.Type == 2 {
@@ -294,7 +299,7 @@ func singleMysqlSave(replyMsg SingleMessage) {
 	msg.ToId, _ = strconv.ParseInt(replyMsg.ToID, 10, 64)
 	msg.FromId, _ = strconv.ParseInt(replyMsg.FromID, 10, 64)
 
-	err := model.DB.Save(&msg).Error
+	err := model.DB.Create(&msg).Error
 	if err != nil {
 		fmt.Println("消息mysql存储失败！！！")
 	}

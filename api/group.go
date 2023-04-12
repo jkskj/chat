@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetGroups 获取群聊列表
 func GetGroups(c *gin.Context) {
 	var group service.GroupService
 	code := e.SUCCESS
@@ -15,6 +16,7 @@ func GetGroups(c *gin.Context) {
 	c.JSON(code, res)
 }
 
+// MakeGroups 创建群聊
 func MakeGroups(c *gin.Context) {
 	var group service.GroupService
 	code := e.SUCCESS
@@ -29,6 +31,7 @@ func MakeGroups(c *gin.Context) {
 	}
 }
 
+// JoinGroups 加入群聊
 func JoinGroups(c *gin.Context) {
 	var group service.GroupService
 	code := e.SUCCESS
@@ -43,6 +46,7 @@ func JoinGroups(c *gin.Context) {
 	}
 }
 
+// GroupMessage 获取群聊消息
 func GroupMessage(c *gin.Context) {
 	var group service.GroupService
 	code := e.SUCCESS
